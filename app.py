@@ -1,7 +1,9 @@
 import flask
 import os
 
-UPLOAD_FOLDER = "./files"
+import wma_to_wav
+
+UPLOAD_FOLDER = "./compressed_audio"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
 
 app = flask.Flask(__name__)
@@ -34,11 +36,23 @@ def upload_file():
             return flask.redirect(flask.url_for("failure"))
     return flask.render_template(flask.url_for("failure"))
 
-@app.route("/uploaded")
+@app.route("/uploaded", methods=["GET"])
 def success():
     return flask.render_template("uploaded.html")
 
-@app.route("/failure", methods=["GET", "POST"])
+@app.route("/failure", methods=["GET"])
 def failure():
     return flask.render_template("failure.html")
 
+@app.route("/loading")
+def loading():
+    return flask.render_template("loading.html")
+
+@app.route("/execute_pipeline")
+def execute_pipeline():
+    wma_to_wav.main()
+    return "complete"
+
+@app.route("/show_results")
+def show_results():
+    return flask.render_template("results.html")

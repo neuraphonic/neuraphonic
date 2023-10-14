@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html> 
+   <head> 
+      <title>Neuraphonic</title> 
+      <script>
+        function navigate() {
+            window.location.href = 'show_results';
+        }
+        fetch('execute_pipeline').then(navigate);
+      </script>    
+   </head> 
+   <body> 
+      <p>Executing Pipeline. Please wait a minute...</p> 
+   </body> 
+</html>
