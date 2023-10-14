@@ -33,8 +33,8 @@ def classifier(df):
 def classify_using_saved_model(audio_sample):
     model = load("randomforest.joblib")
     praat = Praat()
-    audio_sample = praat.getFeatures(audio_sample, 75, 200)
-    df = pd.DataFrame([audio_sample])
+    features = praat.getFeatures(audio_sample, 75, 200)
+    df = pd.DataFrame([features])
     return model.predict(df)
 
 def test_multiple_classifiers(df):

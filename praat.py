@@ -1,6 +1,8 @@
 import parselmouth
 
 from parselmouth.praat import call
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Praat:
     def getFeatures(self, audio_path: str, f0min, f0max):
