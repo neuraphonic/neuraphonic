@@ -6,6 +6,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
+from joblib import dump, load
+from praat import Praat
 
 def regressor(df):
     # Regressor to predict motor_UPDRS
@@ -20,12 +22,20 @@ def regressor(df):
 
 def classifier(df):
     label = df['status']
-    features = df.drop(columns=["status"])
+    features = df.drop(columns=["status", "DFA", "PPE", "RPDE"]) # IMPORTANT - praat does not have DFA, PPE, RPDE yet so we drop them for now
 
     x_train, x_test, y_train, y_test = train_test_split(features, label, test_size=0.2, random_state=42)
     model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
     model.fit(x_train, y_train)
     print(model.score(x_test, y_test))
+    dump(model, "randomforest.joblib")
+
+def classify_using_saved_model(audio_sample):
+    model = load("randomforest.joblib")
+    praat = Praat()
+    audio_sample = praat.getFeatures(audio_sample, 75, 200)
+    df = pd.DataFrame([audio_sample])
+    return model.predict(df)
 
 def test_multiple_classifiers(df):
     log_reg_params = [{"C":0.01}, {"C":0.1}, {"C":1}, {"C":10}]
@@ -70,7 +80,8 @@ df2.drop(columns=["name", "MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "spread
 df1.drop(columns=["total_UPDRS", "subject#", "test_time", "age", "sex", "NHR"], inplace=True)
 df = pd.concat([df1, df2])
 
-test_multiple_classifiers(df)
-
+# test_multiple_classifiers(df)
+# classifier(df)
+print(classify_using_saved_model("files/file_example_WAV_1MG.wav"))
 
 
