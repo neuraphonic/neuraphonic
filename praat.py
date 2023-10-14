@@ -20,8 +20,6 @@ def getFeatures(audio_path: str, f0min, f0max):
     features["shimmer_apq11"] = call([sound, pointProcess], "Get shimmer (apq11)", 0, 0, 0.0001, 0.02, 1.3, 1.6)
     features["shimmer_dda"] = call([sound, pointProcess], "Get shimmer (dda)", 0, 0, 0.0001, 0.02, 1.3, 1.6)
 
-    
-
     return features
 
 feat = getFeatures("audio_samples/test_set_subject_2.wav", 75, 200)
