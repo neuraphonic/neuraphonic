@@ -3,7 +3,7 @@ import parselmouth
 from parselmouth.praat import call
 
 class Praat:
-    def getFeatures(self, audio_path: str, f0min, f0max):
+    def getFeatures(self, audio_path: str, f0min=75, f0max=200):
         sound = parselmouth.Sound(audio_path)
         features = {}
         harmonicity = call(sound, "To Harmonicity (cc)", 0.01, 75, 0.1, 1.0)

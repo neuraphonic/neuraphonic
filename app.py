@@ -3,8 +3,13 @@ import os
 
 import wma_to_wav
 
+from testModel import classify_using_saved_model
+
 UPLOAD_FOLDER = "./compressed_audio"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
+
+filename = None
+result = None
 
 app = flask.Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -20,6 +25,7 @@ def home_page():
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
+    global filename
     if flask.request.method == "POST":
         if "file" not in flask.request.files:
             print("No File")
@@ -50,9 +56,19 @@ def loading():
 
 @app.route("/execute_pipeline")
 def execute_pipeline():
+    global filename
+    global result
     wma_to_wav.main()
+    raw_filename = filename[:-4] + str(".wav")
+    audio_path = audio_path="./audio_samples/" + raw_filename
+    result = classify_using_saved_model(audio_path)
     return "complete"
 
 @app.route("/show_results")
 def show_results():
-    return flask.render_template("results.html")
+    global result
+    if (result[0] == 1):
+        result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. Please consult a doctor for further diagnosis."
+    else:
+        result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease."
+    return flask.render_template("results.html", value=result)

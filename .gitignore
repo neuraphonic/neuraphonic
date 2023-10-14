@@ -4,4 +4,4 @@
 .DS_Store?
 /__pycache__
 compressed_audio/
-/audio_samples/
+audio_samples/
