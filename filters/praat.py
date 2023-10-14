@@ -26,7 +26,7 @@ class Praat:
 
         return features
     
-    def generateSpectrogram(self, audio_path: str, output_dir: str):
+    def generateSpectrogram(self, audio_path: str, output_dir="data/spectrograms"):
         sound = parselmouth.Sound(audio_path)
         spectrogram = sound.to_spectrogram()
         X, Y = spectrogram.x_grid(), spectrogram.y_grid()
