@@ -7,7 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from joblib import dump, load
-from praat import Praat
+from filters.praat import Praat
 
 def regressor(df):
     # Regressor to predict motor_UPDRS
@@ -28,10 +28,10 @@ def classifier(df):
     model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
     model.fit(x_train, y_train)
     print(model.score(x_test, y_test))
-    dump(model, "randomforest.joblib")
+    dump(model, "models/randomforest.joblib")
 
 def classify_using_saved_model(audio_sample):
-    model = load("randomforest.joblib")
+    model = load("models/randomforest.joblib")
     praat = Praat()
     audio_sample = praat.getFeatures(audio_sample, 75, 200)
     df = pd.DataFrame([audio_sample])

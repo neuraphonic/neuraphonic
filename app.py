@@ -1,9 +1,9 @@
 import flask
 import os
 
-import wma_to_wav
+import filters.wma_to_wav as wma_to_wav
 
-from testModel import classify_using_saved_model
+from models.randomForest import classify_using_saved_model
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
