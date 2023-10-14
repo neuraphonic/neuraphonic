@@ -73,9 +73,12 @@ def execute_pipeline():
 
 @app.route("/show_results")
 def show_results():
-    global result
-    if (result[0] == 1):
-        result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
-    else:
-        result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
-    return flask.render_template("results.html", value=result)
+    try:
+        global result
+        if (result[0] == 1):
+            result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
+        else:
+            result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
+        return flask.render_template("results.html", value=result)
+    except:
+        return "Something went wrong in processing the file. Please try again."
