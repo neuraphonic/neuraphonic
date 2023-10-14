@@ -1,1 +1,0 @@
-Files to upload to the backend are located here.
