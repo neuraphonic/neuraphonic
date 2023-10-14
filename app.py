@@ -5,14 +5,15 @@ import wma_to_wav
 
 from testModel import classify_using_saved_model
 
-UPLOAD_FOLDER = "./compressed_audio"
+UPLOAD_FOLDER_WMA = "./compressed_audio"
+UPLOAD_FOLDER_WAV = "./audio_samples"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
 
 filename = None
 result = None
 
 app = flask.Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
 
 def allowed_file(filename):
     value = '.' in filename and \
@@ -36,7 +37,12 @@ def upload_file():
             return flask.redirect(flask.url_for("failure"))
         if file and allowed_file(file.filename):
             filename = file.filename
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            if filename.endswith(".wma"):
+                app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WMA
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            else:
+                app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             return flask.redirect(flask.url_for("success"))
         else:
             return flask.redirect(flask.url_for("failure"))
@@ -58,8 +64,9 @@ def loading():
 def execute_pipeline():
     global filename
     global result
-    wma_to_wav.main()
     raw_filename = filename[:-4] + str(".wav")
+    if filename.endswith(".wma"):
+        wma_to_wav.main()
     audio_path = audio_path="./audio_samples/" + raw_filename
     result = classify_using_saved_model(audio_path)
     return "complete"
