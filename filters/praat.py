@@ -1,4 +1,5 @@
 import parselmouth
+import os
 
 from parselmouth.praat import call
 import matplotlib.pyplot as plt
@@ -24,7 +25,17 @@ class Praat:
         features["HNR"] = call(harmonicity, "Get mean", 0, 0)
 
         return features
+    
+    def generateSpectrogram(self, audio_path: str, output_dir: str):
+        sound = parselmouth.Sound(audio_path)
+        spectrogram = sound.to_spectrogram()
+        X, Y = spectrogram.x_grid(), spectrogram.y_grid()
+        sg_db = 10 * np.log10(spectrogram.values)
+        plt.pcolormesh(X, Y, sg_db, vmin=sg_db.max() - 70, cmap='afmhot')
+        plt.axis('off')
+        plt.grid(False)
+        output_path = output_dir + "/" + os.path.basename(audio_path)[:-4] + ".png"
+        plt.savefig(output_path, bbox_inches='tight', pad_inches=-0.1)
 
 # praat = Praat()
-# feat = praat.getFeatures("files/file_example_WAV_1MG.wav", 75, 200)
-# print(feat)
+# feat = praat.generateSpectrogram("audio_samples/ajungy.wav", "data/spectrograms")
