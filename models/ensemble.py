@@ -55,7 +55,7 @@ def classify(audio_sample, is_cloud=True):
     if (label2 == 1):
         probability = (1 + probability) / 2
 
-    if (label1 == label2 and probability > 0.9):
+    if (label1 == label2 and probability >= 0.9):
         return label1, probability
     else:
         return 0, probability
