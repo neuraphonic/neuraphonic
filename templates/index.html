@@ -6,7 +6,7 @@
       .file-input {
         margin-top: 1rem;
       }
-      .file-input::file-selector-button, .upload-btn {
+      .file-input::file-selector-button, .upload-btn, button {
         font-weight: bold;
         color: black;
         padding: 0.5em;
@@ -15,15 +15,18 @@
         background-color: aquamarine;
         cursor: pointer;
       }
-      input {
+      input, button {
         font-size: 1.2em;
       }
       body {
-        background-image: url('static/bg.jpg');
+        background-image: url('static/img/bg.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-blend-mode: hard-light;
         background-color: teal;
+      }
+      button:disabled, button[disabled] {
+        opacity: 0.5;
       }
     </style>
   </head>
@@ -39,6 +42,19 @@
           <p style="font-size: 20pt;">Neuraphonic is a tool to pre-diagnose patients with Parkinson's based on audio samples.</p>
         </div>
         <div style="border: 1px solid black; opacity: 0.9; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; vertical-align: top; box-shadow: 0 0 5px gray;">
+          <div style="position: relative; top: 17.5%;">
+          <text style="font-size: 30pt; font-weight: bold;">Record Your Audio</text>
+          <br><br>
+          
+          <div id="controls">
+            <button id="recordButton">Record</button>
+            <button id="pauseButton" disabled>Pause</button>
+            <button id="stopButton" disabled>Stop</button>
+          </div>
+          <div id="formats"></div>
+          <!-- <p><strong>Recordings:</strong></p> -->
+          <!-- <ol id="recordingsList"></ol> -->
+          <br><br>
           <text style="font-size: 30pt; font-weight: bold;">Upload Your Audio</text>
           <br><br>
           <form action="/upload" method=post enctype=multipart/form-data>
@@ -46,7 +62,10 @@
             <input class="upload-btn" type=submit value=Upload>
           </form>
         </div>
+        </div>
       </div>
     </center>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+    <script src="/static/js/app.js"></script>
   </body>
 </html>
