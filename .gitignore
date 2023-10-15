@@ -5,3 +5,5 @@
 */__pycache__/
 compressed_audio/
 audio_samples/
+.gcloudignore
+data/spectrograms/

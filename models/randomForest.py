@@ -30,11 +30,14 @@ def classifier(df):
     print(model.score(x_test, y_test))
     dump(model, "models/randomforest.joblib")
 
-def classify_using_saved_model(audio_sample):
+def classify_using_saved_model(audio_sample, is_cloud=True):
     model = load("models/randomforest.joblib")
     praat = Praat()
     features = praat.getFeatures(audio_sample, 75, 200)
-    praat.generateSpectrogram(audio_sample)
+    if is_cloud:
+        praat.generateSpectrogram(audio_sample, "/tmp/")
+    else:
+        praat.generateSpectrogram(audio_sample)
     df = pd.DataFrame([features])
     return model.predict(df)
 

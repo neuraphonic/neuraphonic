@@ -4,16 +4,23 @@ import os
 import filters.wma_to_wav as wma_to_wav
 
 from models.randomForest import classify_using_saved_model
+from twilio.twiml.voice_response import VoiceResponse
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
+UPLOAD_FOLDER_CLOUD = "/tmp/"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
 
 filename = None
 result = None
 
 app = flask.Flask(__name__, static_folder="static")
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
+if os.environ.get("ENV") == "dev":
+    IS_CLOUD = False
+else:
+    IS_CLOUD = True
+
+print(os.environ.get("ENV"), IS_CLOUD)
 
 def allowed_file(filename):
     value = '.' in filename and \
@@ -37,12 +44,13 @@ def upload_file():
             return flask.redirect(flask.url_for("failure"))
         if file and allowed_file(file.filename):
             filename = file.filename
-            if filename.endswith(".wma"):
+            if IS_CLOUD:
+                app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_CLOUD
+            elif filename.endswith(".wma"):
                 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WMA
-                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             else:
                 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
-                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             return flask.redirect(flask.url_for("success"))
         else:
             return flask.redirect(flask.url_for("failure"))
@@ -68,7 +76,7 @@ def execute_pipeline():
     if filename.endswith(".wma"):
         wma_to_wav.main()
     audio_path = audio_path="./audio_samples/" + raw_filename
-    result = classify_using_saved_model(audio_path)
+    result = classify_using_saved_model(audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")
@@ -82,3 +90,34 @@ def show_results():
         return flask.render_template("results.html", value=result)
     except:
         return "Something went wrong in processing the file. Please try again."
+
+@app.route("/execute_pipeline_phone", methods=["POST"])
+def execute_pipeline_phone():
+    print("Successfully recorded voice")
+    print(flask.request.args.get("RecordingUrl"))
+    resp = VoiceResponse()
+    resp.say("ajeeg")
+    return "ajeeg"
+
+
+@app.route("/phone_call", methods=["POST"])
+def phone_call():
+    
+    resp = VoiceResponse()
+    resp.say("Please record your voice")
+    resp.record(
+        recording_status_callback="/execute_pipeline_phone",
+        recording_status_callback_method="POST",
+        recording_status_callback_event="completed",
+        action="/execute_pipeline_phone",
+        finish_on_key="#",
+        play_beep=True,
+        max_length=5
+    )
+
+    resp.say("thank you for recording your voice")
+
+    return str(resp)
+
+if __name__ == "__main__":
+    app.run(debug=True)
