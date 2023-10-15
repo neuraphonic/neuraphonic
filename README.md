@@ -1,5 +1,36 @@
 # Neuraphonic
 
+## Technologies Used
+- Interactive API
+    - Flask
+    - Jsonify
+    - REST
+    - HTML/CSS
+- Execution Pipeline
+    - Google Cloud
+    - Praat
+        - Short-Time Fourier Transforms
+        - Power Spectral Density Analysis
+    - ffmpeg
+        - File Format Transforms
+    - MATLAB
+    - Matplotlib
+    - NumPy
+- Ensemble Models
+    - PyTorch
+        - Vision Transformer
+        - Multi-Layer Perceptron
+    - Torchvision
+        - Fine-Tuning Pipeline
+    - Sci-Kit Learn
+        - Random Forest
+    - Google Cloud
+        - GCP Persistent Storage
+- Mobile API
+    - Twilio
+    - REST
+    - Requests
+
 ## Inspiration
 Diagnoses for neurological disorders are riddled with delays, high costs, and unintuitive instructions for people that are most vulnerable. Specifically, we've found that Parkinson's Disease diagnoses are highly expensive and lengthy, and may not always be necessary for everyone who fears that they have Parkinson's. Furthermore, GP (general practice) centers in the US and EU have been backed up due to many patients' speculation on having Parkinson's. Thus, we built Neuraphonic to act as a middleman on the road to a Parkinson's diagnosis; it can serve as a first test to see if a patient should seek further testing for Parkinson's Disease.
 
