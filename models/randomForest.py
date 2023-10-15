@@ -97,5 +97,4 @@ df2.drop(columns=["name", "MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "spread
 df1.drop(columns=["total_UPDRS", "subject#", "test_time", "age", "sex", "NHR"], inplace=True)
 
 df = pd.concat([df1, df2, df3, df4])
-classifier(df)
 

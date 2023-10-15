@@ -38,6 +38,3 @@ class Praat:
         plt.grid(False)
         output_path = output_dir + "/" + os.path.basename(audio_path)[:-4] + ".png"
         plt.savefig(output_path, bbox_inches='tight', pad_inches=-0.1)
-
-# praat = Praat()
-# feat = praat.generateSpectrogram("audio_samples/ajungy.wav", "data/spectrograms")

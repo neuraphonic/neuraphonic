@@ -8,30 +8,28 @@ from torchvision import transforms, datasets
 
 import os
 
-def classify_using_pytorch(audio_sample):
+def classify_using_pytorch(audio_sample, is_cloud=True):
 
-    os.mkdir('data/spectrograms/0')
+    prefix = "/tmp/" if is_cloud else "/data/"
+    filepath = os.path.join(prefix, "spectrograms/0")
+    os.makedirs(filepath, exist_ok=True)
 
     model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
     model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
 
     model.eval()
     praat = Praat()
-    praat.generateSpectrogram(audio_sample, "data/spectrograms/0")
+    praat.generateSpectrogram(audio_sample, filepath)
 
     transform = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor()])
 
-    image = datasets.ImageFolder('data/spectrograms', transform=transform)
+    image = datasets.ImageFolder(os.path.join(prefix, "spectrograms"), transform=transform)
 
     image = image[0][0].unsqueeze(0)
 
     output = model.forward(image)
 
-    print(output)
-
     label = torch.argmax(output).item()
-
-    print(label)
 
     return label
 
@@ -45,8 +43,8 @@ def classify_using_saved_model(audio_sample):
     print(label)
     return label
 
-def classify(audio_sample):
-    label1 = classify_using_pytorch(audio_sample)
+def classify(audio_sample, is_cloud=True):
+    label1 = classify_using_pytorch(audio_sample, is_cloud)
     label2 = classify_using_saved_model(audio_sample)
 
     if (label1 == label2):
