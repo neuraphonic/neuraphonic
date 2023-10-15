@@ -2,10 +2,7 @@ import pandas as pd
 from joblib import load
 from filters.praat import Praat
 import torch
-import torch.nn as nn
-from torchvision.models import vit_b_16, ViT_B_16_Weights
 from torchvision import transforms, datasets
-import numpy as np
 
 import os
 
@@ -15,8 +12,6 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
     filepath = os.path.join(prefix, "spectrograms/0")
     os.makedirs(filepath, exist_ok=True)
 
-    # model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
-    # model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
     model = torch.load("models/vit.pth")
     print("loaded model")
 

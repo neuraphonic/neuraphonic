@@ -1,7 +1,5 @@
 # Neuraphonic
-A voice-sample based Parkinson's disease diagnosis assistant. Project for hackGT X. 
-
-2nd Place Best Overall Winner
+A voice-sample based Parkinson's disease diagnosis assistant. 2nd place best overall project winner at hackGT X. 
 
 ## Technologies Used
 - Interactive API

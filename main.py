@@ -3,12 +3,9 @@ import os
 
 import filters.wma_to_wav as wma_to_wav
 
-from models.randomForest import classify_using_saved_model
 from models.ensemble import classify
 from twilio.twiml.voice_response import VoiceResponse, Gather
-from flask import request, jsonify
 import requests
-import urllib.parse
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
@@ -143,9 +140,6 @@ def phone_call():
     ssml = "<speak>Please record yourself saying <prosody rate='slow'>AAAAAAAAAAAAAAAAAAAAA</prosody> for a few seconds. Press pound when you are done.</speak>"
     resp.say(ssml, voice="Polly.Joanna", language="en-US")
     resp.record(
-        # recording_status_callback="/execute_pipeline_phone",
-        # recording_status_callback_method="POST",
-        # recording_status_callback_event="completed",
         action="/execute_pipeline_phone",
         finish_on_key="#",
         play_beep=True,

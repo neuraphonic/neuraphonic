@@ -23,7 +23,6 @@ def regressor(df):
 def classifier(df):
     label = df['status']
     features = df.drop(columns=["status", "DFA", "PPE", "RPDE"]) # IMPORTANT - praat does not have DFA, PPE, RPDE yet so we drop them for now
-
     x_train, x_test, y_train, y_test = train_test_split(features, label, test_size=0.2, random_state=42)
     model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
     model.fit(x_train, y_train)
