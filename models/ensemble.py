@@ -47,15 +47,15 @@ def classify_using_saved_model(audio_sample):
     return label
 
 def classify(audio_sample, is_cloud=True):
-    output1, label1 = classify_using_pytorch(audio_sample, is_cloud)
     label2 = classify_using_saved_model(audio_sample)
+    output1, label1 = classify_using_pytorch(audio_sample, is_cloud)
 
     probability = output1
 
     if (label2 == 1):
         probability = (1 + probability) / 2
 
-    if (label1 == label2 and probability >= 0.9):
+    if (label1 == label2):
         return label1, probability
     else:
         return 0, probability
