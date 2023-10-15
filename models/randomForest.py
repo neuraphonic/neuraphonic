@@ -30,11 +30,14 @@ def classifier(df):
     print(model.score(x_test, y_test))
     dump(model, "models/randomforest.joblib")
 
-def classify_using_saved_model(audio_sample):
+def classify_using_saved_model(audio_sample, is_cloud=True):
     model = load("models/randomforest.joblib")
     praat = Praat()
     features = praat.getFeatures(audio_sample, 75, 200)
-    praat.generateSpectrogram(audio_sample)
+    if is_cloud:
+        praat.generateSpectrogram(audio_sample, "/tmp/")
+    else:
+        praat.generateSpectrogram(audio_sample)
     df = pd.DataFrame([features])
     return model.predict(df)
 
@@ -71,14 +74,28 @@ def test_multiple_classifiers(df):
 
 df1 = pd.read_csv("data/parkinsons_timeseries.csv")
 df2 = pd.read_csv("data/healthy_and_unhealthy.csv")
+df3 = pd.read_csv("data/healthy.csv")
+df4 = pd.read_csv("data/unhealthy.csv")
+
+df3.rename(columns={"Unnamed: 0":"status"}, inplace=True)
+df4.rename(columns={"Unnamed: 0":"status"}, inplace=True)
+df3["status"] = 0
+df4["status"] = 1
 
 df1["motor_UPDRS"] = df1["motor_UPDRS"].apply(lambda x: 1 if x > 12 else 0)
 df1.rename(columns={"motor_UPDRS": "status"}, inplace=True)
 df2.rename(columns={"MDVP:Jitter(%)":"Jitter(%)", "MDVP:Jitter(Abs)":"Jitter(Abs)", "MDVP:RAP":"Jitter:RAP", "MDVP:PPQ":"Jitter:PPQ5",
                     "MDVP:Shimmer":"Shimmer", "MDVP:Shimmer(dB)":"Shimmer(dB)", "MDVP:APQ":"Shimmer:APQ11", }, inplace=True)
 
+df3.rename(columns={"MDVP:Jitter(%)":"Jitter(%)", "MDVP:Jitter(Abs)":"Jitter(Abs)", "MDVP:RAP":"Jitter:RAP", "MDVP:PPQ":"Jitter:PPQ5",
+                    "MDVP:Shimmer":"Shimmer", "MDVP:Shimmer(dB)":"Shimmer(dB)", "MDVP:APQ":"Shimmer:APQ11", }, inplace=True)
+
+df4.rename(columns={"MDVP:Jitter(%)":"Jitter(%)", "MDVP:Jitter(Abs)":"Jitter(Abs)", "MDVP:RAP":"Jitter:RAP", "MDVP:PPQ":"Jitter:PPQ5",
+                    "MDVP:Shimmer":"Shimmer", "MDVP:Shimmer(dB)":"Shimmer(dB)", "MDVP:APQ":"Shimmer:APQ11", }, inplace=True)
+
 df2.drop(columns=["name", "MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "spread1", "spread2", "D2", "NHR"], inplace=True)
 df1.drop(columns=["total_UPDRS", "subject#", "test_time", "age", "sex", "NHR"], inplace=True)
-df = pd.concat([df1, df2])
 
+df = pd.concat([df1, df2, df3, df4])
+classifier(df)
 
