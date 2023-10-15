@@ -94,7 +94,7 @@ def show_results():
         else:
             probability = 1 - probability
             result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
-        return flask.render_template("results.html", value=result, probability=probability)
+        return flask.render_template("results.html", value=result, probability=round(probability * 100))
     except:
         return "Something went wrong in processing the file. Please try again."
 

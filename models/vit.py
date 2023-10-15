@@ -76,9 +76,6 @@ def train_loop(model, train_set, test_set, optimizer, loss_fn, epochs):
         print("Epoch " + str(epoch + 1) + ", Loss: " + str(train_loss) + ", Accuracy: " + str(test_acc))
 
 # train_loop(model, train_set, test_set, torch.optim.SGD(parameters, lr=0.003, momentum=0.9), nn.CrossEntropyLoss(), 10)
-<<<<<<< HEAD
-# torch.save(model.state_dict(), 'models/vit.pth')
-=======
 
 # model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
 # model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
@@ -86,4 +83,3 @@ def train_loop(model, train_set, test_set, optimizer, loss_fn, epochs):
 # model.load_state_dict(torch.load("models/vit.pth"))
 
 # torch.save(model, 'models/vit.pth')
->>>>>>> de9bfde13cbb79995cc87cf8d38ac92f46cfeea6

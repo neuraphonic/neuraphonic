@@ -6,7 +6,7 @@
       .file-input {
         margin-top: 1rem;
       }
-      .file-input::file-selector-button, .upload-btn, button {
+      .file-input::file-selector-button, .upload-btn, button, input {
         font-weight: bold;
         color: black;
         padding: 0.5em;
@@ -35,9 +35,10 @@
       <div style="top: 0; margin: 0; margin-bottom: 15vh; background-color: white; height: 15vh; display: grid; place-items: center;">
         <h1 style=<"font-size: 40pt;">Neuraphonic</h1>
       </div>
-      <div style="border: 1px solid black; opacity: 0.9; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; vertical-align: top; box-shadow: 0 0 5px gray;">
+      <div style="border: 1px solid black; opacity: 0.9; font-size: 17pt; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; vertical-align: top; box-shadow: 0 0 5px gray;">
          <p>{{ value }}</p> 
-         <p>Model Confidence in Diagnosis: {{ probability }}</p>
+         <p>Confidence that User has Parkinson's: {{ probability }}%</p>
+         <p style="margin-top: 30px; font-weight: bold;">DISCLAIMER</p>
          <p>This application is not a substitute for medical diagnosis, it is only intended as a tool for general informational purposes
            and as one of many ways to acquire medical information. Please consult your doctor or medical professional for any health
            concerns you may have. Use this information at your own risk.

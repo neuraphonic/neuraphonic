@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 from torchvision.models import vit_b_16, ViT_B_16_Weights
 from torchvision import transforms, datasets
+import numpy as np
 
 import os
 
@@ -31,11 +32,9 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
 
     output = model.forward(image)
 
-    print(output)
-
     label = torch.argmax(output).item()
 
-    return output.item()[1], label
+    return output.detach().numpy()[0][1], label
 
 
 def classify_using_saved_model(audio_sample):
