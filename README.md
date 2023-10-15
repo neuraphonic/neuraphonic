@@ -20,6 +20,8 @@ To allow for greater accessibility for patients, we implemented phone-call API t
 ## Challenges we ran into
 One of the biggest challenges we ran into was deploying the system on Google Cloud, as its storage and compute limitations were rather significant, thus we had to rework the way we trained, stored, and executed the machine learning models to ensure they could fit in Google Cloud's limitations. These limitations were significantly outweighed by the benefits of Google Cloud, which included the ability to universally deploy our model. Implementing the phone call API was also very difficult as none of us had worked with anything similar before and most of the available solutions (including Twilio) were intended for enterprise customers. 
 
+In addition, due to the limitations of only being able to train the model in 36 hours, we could not gather as large a dataset as we would have liked to ensure the model did not overfit on specific types of microphones or audio formats.
+
 ## Accomplishments that we're proud of
 We had three major accomplishments that we were proud of: training a Vision Transformer completely, implementing various famous Signal Processing algorithms by hand, and successfully deploying the model to Google Cloud and having it universally work. These were three major challenges that had troubled us in previous projects, and overcoming these difficulties was very satisfying. 
 
