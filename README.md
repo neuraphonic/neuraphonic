@@ -15,6 +15,8 @@ The image and the tabular representation are sent into the ensemble model, that 
 
 The model is stored in a Google Cloud Storage bucket, which is a long-term persistent storage region to store the pre-trained Vision Transformer and Random Forest model.
 
+To allow for greater accessibility for patients, we implemented phone-call API through the Twilio API. This allows for patients to call a specified phone number and have their voice be recorded and told over audio whether there was a high-likelihood of having parkinson's disease, requiring a visit to a medical center for further neurological tests. The Twilio API is done through attaching webhooks to our webapp and linking it to a specified Twilio phone number. Once the phone number is called, the twilio webhooks execute, record the audio, and then run it through our ML model to get the final results for the patient.
+
 ## Challenges we ran into
 One of the biggest challenges we ran into was deploying the system on Google Cloud, as its storage and compute limitations were rather significant, thus we had to rework the way we trained, stored, and executed the machine learning models to ensure they could fit in Google Cloud's limitations. These limitations were significantly outweighed by the benefits of Google Cloud, which included the ability to universally deploy our model.
 
@@ -28,4 +30,3 @@ This project involved a wide variety of technologies that we had minimal to no e
 1. Establish a way to connect to the interface via a phone call: a user could call in and send a recording and have a phone API sent the recording over to the execution pipeline.
 2. Establish an SSL certificate so that the Neuraphonic website uses HTTPS instead of HTTP. Once established, the user can record their voice in real time and send their voice for processing instead of pre-recording a file.
 3. Our datasets are comparatively small for the sheer size of the models, and because we only had 36 hours on limited hardware, we could not train the model to the extent we desired. With more time, we would significantly optimize the models and perhaps use it for multi-class classification.
-4. As the target audience of this feature is people who may need accessibility features, we plan to add significant accessibility improvements to the website.
