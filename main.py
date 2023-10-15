@@ -5,7 +5,9 @@ import filters.wma_to_wav as wma_to_wav
 
 from models.randomForest import classify_using_saved_model
 from models.ensemble import classify
-# from twilio.twiml.voice_response import VoiceResponse
+from twilio.twiml.voice_response import VoiceResponse, Gather
+from flask import request, jsonify
+import requests
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
@@ -101,21 +103,36 @@ def show_results():
 @app.route("/execute_pipeline_phone", methods=["POST"])
 def execute_pipeline_phone():
     print("Successfully recorded voice")
-    print(flask.request.args.get("RecordingUrl"))
+    auth_username = "AC378dfa1cc5da3d99d3d8bf2a702ac5ed"
+    auth_token = "851ff0897a5c2f3387e7fb45314f1769"
+    recording_url = flask.request.values.get("RecordingUrl")
+    try:
+        with requests.get(recording_url, stream=True, auth=(auth_username, auth_token)) as r:
+            r.raise_for_status()
+            with open('/tmp/recorded_audio.wav', 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+        print("Audio file saved successfully.")
+    except requests.exceptions.RequestException as e:
+        print(f"Error during download: {e}")
+
+    print(flask.request.values.get("AccountSid"))
     resp = VoiceResponse()
     resp.say("ajeeg")
-    return "ajeeg"
+    return str(resp)
 
 
 @app.route("/phone_call", methods=["POST"])
 def phone_call():
-    
+
     resp = VoiceResponse()
+    gather = Gather(input="speech", timeout=3, action="/execute_pipeline_phone")
     resp.say("Please record your voice")
     resp.record(
-        recording_status_callback="/execute_pipeline_phone",
-        recording_status_callback_method="POST",
-        recording_status_callback_event="completed",
+        # recording_status_callback="/execute_pipeline_phone",
+        # recording_status_callback_method="POST",
+        # recording_status_callback_event="completed",
         action="/execute_pipeline_phone",
         finish_on_key="#",
         play_beep=True,
@@ -125,6 +142,76 @@ def phone_call():
     resp.say("thank you for recording your voice")
 
     return str(resp)
+
+@app.route('/webhooks/answer')
+def answer_call():
+    # Create an NCCO for the call flow
+    ncco = [
+        {
+            'action': 'talk',
+            'text': 'Thank you for calling. This is Neuraphonic, press 1 to record yourself saying the vowels A, E, I, O, U.'
+        },
+        {
+            'action': 'input',
+            'eventUrl': [request.url_root + 'webhooks/dtmf'],
+            'timeOut': 10,
+            'maxDigits': 1
+        }
+    ]
+
+    return jsonify(ncco)
+
+@app.route('/webhooks/dtmf')
+def handle_dtmf():
+    user_input = request.get_json().get('dtmf')
+
+    if user_input == '1':
+        # Start recording user's message
+        ncco = [
+            {
+                'action': 'talk',
+                'text': 'Press any key to start recording after the beep.'
+            },
+            {
+                'action': 'record',
+                'eventUrl': [request.url_root + 'webhooks/recording']
+            }
+        ]
+    else:
+        # Handle other DTMF input
+        ncco = [
+            {
+                'action': 'talk',
+                'text': 'Invalid input. Goodbye.'
+            }
+        ]
+
+    return jsonify(ncco)
+
+@app.route('/webhooks/recording')
+def handle_recording():
+    recording_url = request.get_json().get('recording_url')
+
+    if recording_url:
+        # Download the recording and save it to a local file
+        response = requests.get(recording_url)
+        if response.status_code == 200:
+            recording_filename = os.path.join(app.config["UPLOAD_FOLDER"], 'user_recording.wav')
+            with open(recording_filename, 'wb') as file:
+                file.write(response.content)
+
+    ncco = [
+        {
+            'action': 'talk',
+            'text': 'Thank you for your message. Goodbye.'
+        },
+        {
+            'action': 'stream',
+            'streamUrl': [request.url_root]
+        }
+    ]
+
+    return jsonify(ncco)
 
 if __name__ == "__main__":
     app.run(debug=True)
