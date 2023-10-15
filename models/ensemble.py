@@ -14,8 +14,10 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
     filepath = os.path.join(prefix, "spectrograms/0")
     os.makedirs(filepath, exist_ok=True)
 
-    model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
-    model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
+    # model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
+    # model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
+    model = torch.load("models/vit.pth")
+    print("loaded model")
 
     model.eval()
     praat = Praat()
@@ -29,7 +31,11 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
 
     output = model.forward(image)
 
+    print(output)
+
     label = torch.argmax(output).item()
+
+    print(label)
 
     return label
 
