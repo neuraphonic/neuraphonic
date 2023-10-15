@@ -92,6 +92,7 @@ def show_results():
         if (result == 1):
             result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
         else:
+            probability = 1 - probability
             result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
         return flask.render_template("results.html", value=result, probability=probability)
     except:
