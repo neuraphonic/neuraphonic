@@ -75,5 +75,5 @@ def train_loop(model, train_set, test_set, optimizer, loss_fn, epochs):
 
         print("Epoch " + str(epoch + 1) + ", Loss: " + str(train_loss) + ", Accuracy: " + str(test_acc))
 
-train_loop(model, train_set, test_set, torch.optim.SGD(parameters, lr=0.003, momentum=0.9), nn.CrossEntropyLoss(), 10)
-torch.save(model.state_dict(), 'models/vit.pth')
+# train_loop(model, train_set, test_set, torch.optim.SGD(parameters, lr=0.003, momentum=0.9), nn.CrossEntropyLoss(), 10)
+# torch.save(model.state_dict(), 'models/vit.pth')

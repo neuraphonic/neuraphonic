@@ -1,15 +1,52 @@
 <!DOCTYPE html>
-<html> 
-   <head> 
-      <title>Neuraphonic</title> 
-      <script>
-        function navigate() {
-            window.location.href = 'show_results';
-        }
-        fetch('execute_pipeline').then(navigate);
-      </script>    
-   </head> 
-   <body> 
-      <p>Executing Pipeline. Please wait a minute...</p> 
-   </body> 
+<html>
+  <head>
+    <title>Neuraphonic</title>
+    <style>
+      .file-input {
+        margin-top: 1rem;
+      }
+      .file-input::file-selector-button, .upload-btn, button {
+        font-weight: bold;
+        color: black;
+        padding: 0.5em;
+        border: thin solid gray;
+        border-radius: 15px;
+        background-color: aquamarine;
+        cursor: pointer;
+      }
+      input, button {
+        font-size: 1.2em;
+      }
+      body {
+        background-image: url('static/img/bg.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-blend-mode: hard-light;
+        background-color: teal;
+      }
+      button:disabled, button[disabled] {
+        opacity: 0.5;
+      }
+    </style>
+    <script>
+      function navigate() {
+          window.location.href = 'show_results';
+      }
+      fetch('execute_pipeline').then(navigate);
+    </script>  
+  </head>
+  <body style="margin: 0; font-family: Helvetica;">
+    <center>
+      <div style="top: 0; margin: 0; margin-bottom: 15vh; background-color: white; height: 15vh; display: grid; place-items: center;">
+        <h1 style="font-size: 40pt;">Neuraphonic</h1>
+      </div>
+      <div style="border: 1px solid black; opacity: 0.9; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; vertical-align: top; box-shadow: 0 0 5px gray;">
+         <p style="font-size: 20pt;">Executing Pipeline. Please wait a minute...</p>
+         <img src="static/img/loading.gif" style="width: 50%;">
+      </div>
+    </center>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+    <script src="/static/js/app.js"></script>
+  </body>
 </html>

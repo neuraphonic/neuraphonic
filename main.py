@@ -53,7 +53,7 @@ def upload_file():
             else:
                 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            return flask.redirect(flask.url_for("success"))
+            return flask.redirect(flask.url_for("loading"))
         else:
             return flask.redirect(flask.url_for("failure"))
     return flask.render_template(flask.url_for("failure"))
@@ -78,7 +78,7 @@ def execute_pipeline():
     if filename.endswith(".wma"):
         wma_to_wav.main()
     audio_path = app.config["UPLOAD_FOLDER"] + raw_filename
-    result = classify(audio_path, IS_CLOUD)
+    result = classify(audio_path)
     return "complete"
 
 @app.route("/show_results")

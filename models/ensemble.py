@@ -10,7 +10,10 @@ import os
 
 def classify_using_pytorch(audio_sample):
 
-    os.mkdir('data/spectrograms/0')
+    try:
+        os.mkdir('data/spectrograms/0')
+    except:
+        pass
 
     model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
     model.heads = nn.Sequential(nn.Linear(in_features=768, out_features=2), nn.Softmax(dim=1))
