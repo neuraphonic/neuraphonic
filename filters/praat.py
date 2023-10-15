@@ -3,6 +3,7 @@ import os
 
 from parselmouth.praat import call
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 
 class Praat:
@@ -27,6 +28,7 @@ class Praat:
         return features
     
     def generateSpectrogram(self, audio_path: str, output_dir="data/spectrograms"):
+        matplotlib.use('agg')
         sound = parselmouth.Sound(audio_path)
         spectrogram = sound.to_spectrogram()
         X, Y = spectrogram.x_grid(), spectrogram.y_grid()

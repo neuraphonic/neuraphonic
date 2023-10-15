@@ -4,12 +4,14 @@ import os
 import filters.wma_to_wav as wma_to_wav
 
 from models.randomForest import classify_using_saved_model
+from models.ensemble import classify
 from twilio.twiml.voice_response import VoiceResponse
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
 UPLOAD_FOLDER_CLOUD = "/tmp/"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
+
 
 filename = None
 result = None
@@ -75,15 +77,15 @@ def execute_pipeline():
     raw_filename = filename[:-4] + str(".wav")
     if filename.endswith(".wma"):
         wma_to_wav.main()
-    audio_path = audio_path="./audio_samples/" + raw_filename
-    result = classify_using_saved_model(audio_path, IS_CLOUD)
+    audio_path = app.config["UPLOAD_FOLDER"] + raw_filename
+    result = classify(audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")
 def show_results():
     try:
         global result
-        if (result[0] == 1):
+        if (result == 1):
             result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
         else:
             result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
