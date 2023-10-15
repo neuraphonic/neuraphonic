@@ -2,12 +2,51 @@
 <html>
   <head>
     <title>Neuraphonic</title>
+    <style>
+      .file-input {
+        margin-top: 1rem;
+      }
+      .file-input::file-selector-button, .upload-btn {
+        font-weight: bold;
+        color: black;
+        padding: 0.5em;
+        border: thin solid gray;
+        border-radius: 15px;
+        background-color: aquamarine;
+        cursor: pointer;
+      }
+      input {
+        font-size: 1.2em;
+      }
+      body {
+        background-image: url('static/bg.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-blend-mode: hard-light;
+        background-color: teal;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Welcome to Neuraphonic!</h1>
-    <form action="/upload" method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+  <body style="margin: 0; font-family: Helvetica;">
+    <center>
+      <div style="top: 0; margin: 0; margin-bottom: 15vh; background-color: white; height: 15vh; display: grid; place-items: center;">
+        <h1 style="font-size: 40pt;">Welcome to Neuraphonic!</h1>
+      </div>
+      <div>
+        <div style="border: 1px solid black; opacity: 0.9; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; box-shadow: 0 0 5px gray; margin-right: 5%;">
+          <text style="font-size: 30pt; font-weight: bold;">About Us</text>
+          <br><br>
+          <p style="font-size: 20pt;">Neuraphonic is a tool to pre-diagnose patients with Parkinson's based on audio samples.</p>
+        </div>
+        <div style="border: 1px solid black; opacity: 0.9; background-color: white; width: 40%; padding: 15px; border-radius: 5%; display: inline-block; height: 50vh; vertical-align: top; box-shadow: 0 0 5px gray;">
+          <text style="font-size: 30pt; font-weight: bold;">Upload Your Audio</text>
+          <br><br>
+          <form action="/upload" method=post enctype=multipart/form-data>
+            <input class="file-input" type=file name=file>
+            <input class="upload-btn" type=submit value=Upload>
+          </form>
+        </div>
+      </div>
+    </center>
   </body>
 </html>

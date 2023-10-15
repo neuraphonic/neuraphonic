@@ -12,7 +12,7 @@ ALLOWED_EXTENSIONS = {"wav", "wma"}
 filename = None
 result = None
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_WAV
 
 def allowed_file(filename):
