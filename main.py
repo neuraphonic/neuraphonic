@@ -5,7 +5,7 @@ import filters.wma_to_wav as wma_to_wav
 
 from models.randomForest import classify_using_saved_model
 from models.ensemble import classify
-from twilio.twiml.voice_response import VoiceResponse
+# from twilio.twiml.voice_response import VoiceResponse
 
 UPLOAD_FOLDER_WMA = "./compressed_audio"
 UPLOAD_FOLDER_WAV = "./audio_samples"
@@ -15,6 +15,8 @@ ALLOWED_EXTENSIONS = {"wav", "wma"}
 
 filename = None
 result = None
+
+probability = None
 
 app = flask.Flask(__name__, static_folder="static")
 if os.environ.get("ENV") == "dev":
@@ -73,23 +75,25 @@ def loading():
 def execute_pipeline():
     global filename
     global result
+    global probability
     raw_filename = filename[:-4] + str(".wav")
     if filename.endswith(".wma"):
         wma_to_wav.main()
     audio_path = os.path.join(app.config["UPLOAD_FOLDER"], raw_filename)
     print(audio_path)
-    result = classify(audio_path, IS_CLOUD)
+    result, probability = classify(audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")
 def show_results():
     try:
         global result
+        global probability
         if (result == 1):
             result = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
         else:
             result = "Your voice pattern does not show features that may be indicative of Parkinson's Disease. Ensure that you talk to your doctor to gather a complete medical picture."
-        return flask.render_template("results.html", value=result)
+        return flask.render_template("results.html", value=result, probability=probability)
     except:
         return "Something went wrong in processing the file. Please try again."
 
