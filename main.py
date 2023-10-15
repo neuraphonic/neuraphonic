@@ -22,7 +22,6 @@ if os.environ.get("ENV") == "dev":
 else:
     IS_CLOUD = True
 
-print(os.environ.get("ENV"), IS_CLOUD)
 
 def allowed_file(filename):
     value = '.' in filename and \
@@ -77,8 +76,9 @@ def execute_pipeline():
     raw_filename = filename[:-4] + str(".wav")
     if filename.endswith(".wma"):
         wma_to_wav.main()
-    audio_path = app.config["UPLOAD_FOLDER"] + raw_filename
-    result = classify(audio_path)
+    audio_path = os.path.join(app.config["UPLOAD_FOLDER"], raw_filename)
+    print(audio_path)
+    result = classify(audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")
