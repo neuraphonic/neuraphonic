@@ -1,6 +1,8 @@
 # Neuraphonic
 A voice-sample based Parkinson's disease diagnosis assistant. 2nd place best overall project at hackGT X. 
 
+[Devpost](https://devpost.com/software/neuraphonic?ref_content=user-portfolio&ref_feature=in_progress)
+
 ## Technologies Used
 - Interactive API
     - Flask
