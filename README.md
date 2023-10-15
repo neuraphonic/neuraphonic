@@ -28,3 +28,4 @@ This project involved a wide variety of technologies that we had minimal to no e
 1. Establish a way to connect to the interface via a phone call: a user could call in and send a recording and have a phone API sent the recording over to the execution pipeline.
 2. Establish an SSL certificate so that the Neuraphonic website uses HTTPS instead of HTTP. Once established, the user can record their voice in real time and send their voice for processing instead of pre-recording a file.
 3. Our datasets are comparatively small for the sheer size of the models, and because we only had 36 hours on limited hardware, we could not train the model to the extent we desired. With more time, we would significantly optimize the models and perhaps use it for multi-class classification.
+4. As the target audience of this feature is people who may need accessibility features, we plan to add significant accessibility improvements to the website.
