@@ -19,6 +19,7 @@ stopButton.addEventListener("click", stopRecording);
 pauseButton.addEventListener("click", pauseRecording);
 
 function startRecording() {
+
     console.log("recordButton clicked");
 
     /*
@@ -74,6 +75,8 @@ function startRecording() {
 
     }).catch(function(err) {
         //enable the record button if getUserMedia() fails
+        alert("Microphone Disabled");
+
         recordButton.disabled = false;
         stopButton.disabled = true;
         pauseButton.disabled = true
