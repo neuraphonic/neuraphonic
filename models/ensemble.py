@@ -35,7 +35,7 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
 
     label = torch.argmax(output).item()
 
-    return output.item(), label
+    return output.item()[1], label
 
 
 def classify_using_saved_model(audio_sample):
@@ -51,7 +51,7 @@ def classify(audio_sample, is_cloud=True):
     output1, label1 = classify_using_pytorch(audio_sample, is_cloud)
     label2 = classify_using_saved_model(audio_sample)
 
-    probability = output1[1]
+    probability = output1
 
     if (label2 == 1):
         probability = (1 + probability) / 2
