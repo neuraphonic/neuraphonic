@@ -38,19 +38,20 @@ def classify_using_saved_model(audio_sample):
     features = praat.getFeatures(audio_sample, 75, 200)
     df = pd.DataFrame([features])
     label = model.predict(df)[0]
-    print(label)
-    return label
+    score = model.predict_proba(df)[0][label]
+    return score, label
 
 def classify(audio_sample, is_cloud=True):
-    label2 = classify_using_saved_model(audio_sample)
-    output1, label1 = classify_using_pytorch(audio_sample, is_cloud)
+    if is_cloud:
+        return classify_using_saved_model(audio_sample)
 
-    probability = output1
-
-    if (label2 == 1):
-        probability = (1 + probability) / 2
-
-    if (label1 == label2):
-        return label1, probability
     else:
-        return 0, probability
+        output2, label2 = classify_using_saved_model(audio_sample)
+        output1, label1 = classify_using_pytorch(audio_sample, is_cloud)
+
+        probability = (output2 + output1) / 2
+            
+        if (label1 == label2):
+            return label1, probability
+        else:
+            return 0, probability
