@@ -1,5 +1,4 @@
 import pandas as pd
-from joblib import load
 from filters.praat import Praat
 import torch
 from torchvision import transforms, datasets
@@ -32,8 +31,7 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
     return output.detach().numpy()[0][1], label
 
 
-def classify_using_saved_model(audio_sample):
-    model = load("models/randomforest.joblib")
+def classify_using_saved_model(model, audio_sample):
     praat = Praat()
     features = praat.getFeatures(audio_sample, 75, 200)
     df = pd.DataFrame([features])
@@ -41,9 +39,9 @@ def classify_using_saved_model(audio_sample):
     score = model.predict_proba(df)[0][label]
     return score, label
 
-def classify(audio_sample, is_cloud=True):
+def classify(model, audio_sample, is_cloud=True):
     if is_cloud:
-        return classify_using_saved_model(audio_sample)
+        return classify_using_saved_model(model, audio_sample)
 
     else:
         output2, label2 = classify_using_saved_model(audio_sample)

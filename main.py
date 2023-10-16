@@ -1,6 +1,8 @@
 import flask
 import os
 
+from joblib import load
+
 import filters.wma_to_wav as wma_to_wav
 
 from models.ensemble import classify
@@ -12,6 +14,7 @@ UPLOAD_FOLDER_WAV = "./audio_samples"
 UPLOAD_FOLDER_CLOUD = "/tmp/"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
 
+model = load("models/randomforest.joblib")
 
 filename = None
 result = None
@@ -76,12 +79,13 @@ def execute_pipeline():
     global filename
     global result
     global probability
+    global model
     raw_filename = filename[:-4] + str(".wav")
     if filename.endswith(".wma"):
         wma_to_wav.main()
     audio_path = os.path.join(app.config["UPLOAD_FOLDER"], raw_filename)
     print(audio_path)
-    result, probability = classify(audio_path, IS_CLOUD)
+    result, probability = classify(model, audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")
@@ -104,6 +108,7 @@ def execute_pipeline_phone():
     global filename
     global result
     global probability
+    global model
     auth_username = "AC378dfa1cc5da3d99d3d8bf2a702ac5ed"
     auth_token = "851ff0897a5c2f3387e7fb45314f1769"
     recording_url = flask.request.values.get("RecordingUrl")
@@ -119,7 +124,7 @@ def execute_pipeline_phone():
                         f.write(chunk)
         print("Audio file saved successfully.")
         filename = "/tmp/recorded_audio.wav"
-        result, probability = classify(filename, IS_CLOUD)
+        result, probability = classify(model, filename, IS_CLOUD)
         if result == 1:
             result_msg = "Your voice pattern shows features that may be indicative of Parkinson's Disease. You may want to consider consulting a doctor for further diagnosis."
         else:
