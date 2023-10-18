@@ -14,7 +14,7 @@ UPLOAD_FOLDER_WAV = "./audio_samples"
 UPLOAD_FOLDER_CLOUD = "/tmp/"
 ALLOWED_EXTENSIONS = {"wav", "wma"}
 
-model = load("models/randomforest.joblib")
+# model = load("models/randomforest.joblib")
 
 filename = None
 result = None
@@ -42,7 +42,7 @@ def upload_file():
     global filename
     if flask.request.method == "POST":
         if "file" not in flask.request.files:
-            print("No File")
+            print("No File")    
             return flask.redirect(flask.url_for("failure"))
         file = flask.request.files["file"]
         if file.filename == "":
@@ -79,13 +79,13 @@ def execute_pipeline():
     global filename
     global result
     global probability
-    global model
+    # global model
     raw_filename = filename[:-4] + str(".wav")
     if filename.endswith(".wma"):
         wma_to_wav.main()
     audio_path = os.path.join(app.config["UPLOAD_FOLDER"], raw_filename)
     print(audio_path)
-    result, probability = classify(model, audio_path, IS_CLOUD)
+    result, probability = classify(audio_path, IS_CLOUD)
     return "complete"
 
 @app.route("/show_results")

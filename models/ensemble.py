@@ -2,6 +2,7 @@ import pandas as pd
 from filters.praat import Praat
 import torch
 from torchvision import transforms, datasets
+from joblib import load
 
 import os
 
@@ -11,8 +12,12 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
     filepath = os.path.join(prefix, "spectrograms/0")
     os.makedirs(filepath, exist_ok=True)
 
-    model = torch.load("models/vit.pth")
-    print("loaded model")
+    if not is_cloud:
+        model = torch.load("models/vit.pth")
+        print("loaded model")
+    else:
+        model = None
+        print("did not load model because this is cloud")
 
     model.eval()
     praat = Praat()
@@ -31,17 +36,20 @@ def classify_using_pytorch(audio_sample, is_cloud=True):
     return output.detach().numpy()[0][1], label
 
 
-def classify_using_saved_model(model, audio_sample):
+def classify_using_saved_model(audio_sample):
     praat = Praat()
     features = praat.getFeatures(audio_sample, 75, 200)
     df = pd.DataFrame([features])
+    model = load("models/randomforest.joblib")
     label = model.predict(df)[0]
     score = model.predict_proba(df)[0][label]
-    return score, label
+    print(label, score)
+    return label, score
 
-def classify(model, audio_sample, is_cloud=True):
+def classify(audio_sample, is_cloud=True):
     if is_cloud:
-        return classify_using_saved_model(model, audio_sample)
+        print("only using randomforest model")
+        return classify_using_saved_model(audio_sample)
 
     else:
         output2, label2 = classify_using_saved_model(audio_sample)
